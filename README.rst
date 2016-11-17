@@ -11,9 +11,9 @@ WebDAV renderers, views, serializers for Django REST Framework
 Requirements
 ------------
 
--  Python (2.7, 3.3, 3.4)
--  Django (1.6, 1.7, 1.8)
--  Django REST Framework (2.4, 3.0, 3.1)
+-  Python (2.7, 3.3, 3.4, 3.5)
+-  Django (1.8, 1.9, 1.10)
+-  Django REST Framework (3.4, 3.5)
 
 Installation
 ------------
@@ -36,7 +36,7 @@ Install testing requirements.
 
 .. code:: bash
 
-    $ pip install -r requirements.txt
+    $ pip install -r requirements/requirements.txt
 
 Run with runtests.
 
