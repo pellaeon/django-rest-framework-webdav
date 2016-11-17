@@ -1,0 +1,27 @@
+[report]
+exclude_lines = 
+    # Re-enable the standard pragma
+    pragma: no cover
+
+    # Ignore defensive assertions
+	raise AssertionError
+    raise NotImplementedError
+
+    # Ignore debugging representations.
+    def __str__
+    def __repr__
+
+    # Exclude code that can't be executed.
+    if 0:
+    if False:
+    if __name__ == .__main__.:
+
+    # Exclude stuff for debugging
+    if self\.config\['DEBUG'\]:
+    if self\.debug:
+
+    # Ignore import exceptions
+    except ImportError:
+
+    # Ignore python compatibility.
+    if PY3

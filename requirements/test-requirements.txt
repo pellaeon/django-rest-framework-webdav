@@ -1,0 +1,6 @@
+pytest>=2.8.6
+pytest-django
+pytest-cov
+mock
+djangorestframework>=3.5.3
+-e .

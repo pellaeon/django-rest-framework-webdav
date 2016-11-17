@@ -1,0 +1,2 @@
+lxml
+future>=0.16.0

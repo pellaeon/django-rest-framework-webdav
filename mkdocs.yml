@@ -1,0 +1,4 @@
+site_name: djangorestframework-webdav
+site_description: WebDAV renderers, views, serializers for Django REST Framework
+repo_url: https://github.com/pellaeon/django-rest-framework-webdav
+site_dir: html
