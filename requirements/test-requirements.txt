@@ -1,6 +1,7 @@
-pytest>=2.8.6
-pytest-django
-pytest-cov
+tox==2.5.0
+pytest==3.0.4
+pytest-django==3.0.0
+pytest-cov==2.4.0
 
 flake8==2.2.2
 
