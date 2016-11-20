@@ -1,1 +1,2 @@
 lxml
+djangorestframework>=3.4
