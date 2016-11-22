@@ -5,7 +5,8 @@ from __future__ import unicode_literals
 # Copyright (c) 2011, SmartFile <btimby@smartfile.com>
 # All rights reserved.
 #
-# This file is part of DjangoDav.
+# This file is originally from DjangoDav project, modified for use with
+# django-rest-framework-webdav
 #
 # DjangoDav is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -28,7 +29,17 @@ from django.utils.http import urlquote
 from djangodav.utils import rfc3339_date, rfc1123_date, safe_join
 
 
-class BaseDavResource(object):
+class BaseResource(object):
+    """
+    A "resource" is an object with certain methods, instantiated by view
+    with path specification, used to represent a WebDAV resource
+    (may be collection).
+    Methods are called by view and serializer to obtain information about the
+    underlying resource, such as a file.
+
+    Subclass this class to provide an implementation.
+    """
+
     ALL_PROPS = ['getcontentlength', 'creationdate', 'getlastmodified', 'resourcetype', 'displayname']
 
     LIVE_PROPERTIES = [
