@@ -6,7 +6,7 @@ class WebDAVResponseSerializer(Serializer):
 
     depth = None
 
-    def __init__(self, depth, *args, **kwargs):
+    def __init__(self, depth=1, *args, **kwargs):
         """
         depth: requested depth from client
         """
@@ -14,4 +14,6 @@ class WebDAVResponseSerializer(Serializer):
         super(WebDAVResponseSerializer, self).__init__(**kwargs)
 
 class WebDAVRequestSerializer(Serializer):
-# TODO
+
+    depth = None
+    # TODO
