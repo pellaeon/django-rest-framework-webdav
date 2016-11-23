@@ -2,3 +2,5 @@
 
 Django>=1.8
 djangorestframework>=3.4
+future>=0.16.0
+-e git+https://github.com/pellaeon/djangodav#egg=djangodav

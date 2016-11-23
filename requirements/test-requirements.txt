@@ -10,3 +10,8 @@ wheel==0.24.0
 
 # MkDocs for documentation previews/deploys
 mkdocs==0.11.1
+
+future>=0.16.0
+mock
+
+-e git+https://github.com/pellaeon/djangodav#egg=djangodav
