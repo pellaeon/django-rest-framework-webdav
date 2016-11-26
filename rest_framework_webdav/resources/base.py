@@ -55,6 +55,7 @@ class BaseResource(object):
             self.path = path.split("/")
 
     def get_path(self):
+        print('asdasd')
         return ("/" if self.path else "") + "/".join(self.path) + ("/" * (self.is_collection))
 
     def get_escaped_path(self):

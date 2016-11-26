@@ -27,6 +27,7 @@ from mock import Mock, MagicMock
 
 class MockResource(MagicMock, BaseResource):
     exists = True
+    is_collection = True
     get_created = Mock(return_value=datetime(1983, 12, 24, 6, tzinfo=utc))
     get_modified = Mock(return_value=datetime(2014, 12, 24, 6, tzinfo=utc))
     getcontentlength = 0

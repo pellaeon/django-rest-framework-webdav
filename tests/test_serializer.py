@@ -26,7 +26,19 @@ class TestMultiStatusSerializer(TestCase):
 
     def test_1(self):
         expect = 'asdasd'
-        representation = MultistatusSerializer(instance=self.resource, context={
+        #print(self.resource.get_path())
+        ser1 = MultistatusSerializer(instance=self.resource, context={
             'requested_resource': self.resource,
             'depth': 1,
-            }).to_representation(self.resource)
+            })
+        rep1 = ser1.data
+        print(rep1)
+        print('-----------')
+
+        print(dir(ser1.fields['responses']))
+        #ser1.fields['responses'].get_descendants()
+        #print(ser1.fields['responses'].descendants[0].get_path())
+        #print(ser1.fields['responses'].descendants[0].to_representation())
+        #print(ser1.fields['responses'].descendants[0].instance)
+        #print(ResponseSerializer.to_representation(ser1.fields['responses'].descendants[0]))
+        print(ser1.fields['responses'].descendants)

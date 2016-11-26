@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from rest_framework.fields import CharField, URLField, ListField
+from rest_framework.fields import *
 from rest_framework.serializers import ListSerializer
 
 from rest_framework_webdav.serializers import WebDAVResponseSerializer
@@ -30,12 +30,17 @@ class PropstatSerializer(WebDAVResponseSerializer):
 
 class ResponseListSerializer(ListSerializer):
 
+    descendants = []
+
     def to_representation(self, obj):
-        # obj is the Resource object of client requested path,
-        # we won't use it here, we use response_objects instead
+        if not self.descendants:
+            self.get_descendants(obj)
+
         ret = []
-        for resp_obj in self.get_response_objects():
-            ret.append(self.child.to_representation(resp_obj))
+        for descendant_field in self.descendants:
+            print('asii')
+            print(descendant_field)
+            ret.append(descendant_field.data)
 
         return ret
 
@@ -45,6 +50,13 @@ class ResponseListSerializer(ListSerializer):
         return list(self.context.get('requested_resource').get_descendants(
             depth=self.context.get('depth'))
             )
+
+    def get_descendants(self, resource):
+        assert isinstance(self.context.get('depth'), int)
+        for res_obj in resource.get_descendants(
+                depth=self.context.get('depth')):
+            print(res_obj)
+            self.descendants.append(ResponseSerializer(instance=res_obj))
 
 class ResponseSerializer(WebDAVResponseSerializer):
     """
@@ -58,38 +70,56 @@ class ResponseSerializer(WebDAVResponseSerializer):
     class Meta:
         list_serializer_class = ResponseListSerializer
 
-    href = ListField(child=URLField(max_length=None))
+    #href = ListField(child=URLField(max_length=None), source='get_path')
+    href = SerializerMethodField()
     status = CharField(required=False)
-    propstat = PropstatSerializer(many=True, source='*')
+    #propstat = PropstatSerializer(many=True, source='*')
+    propstat = SerializerMethodField()
 
     #maybe delete this
-    def to_representation(self, resource):
-        assert isinstance(resource, BaseResource)
+    #def to_representation(self, resource):
+    #    assert isinstance(resource, BaseResource)
 
-        # this will in turn call to_representation() on every field
-        output = super(ResponseSerializer, self).to_representation(self.instance)
+    #    # this will in turn call to_representation() on every field
+    #    output = super(ResponseSerializer, self).to_representation(self.instance)
 
-        return output
+    #    return output
+
+    def get_href(self, obj):
+        print('get href called')
+        return self.instance.get_path()
+
+    def get_propstat(self, obj):
+        return "sssss"
+
+    @property
+    def data(self):
+        print('iii')
+        return super(ResponseSerializer, self).data
     
 class MultistatusSerializer(WebDAVResponseSerializer):
     """
     <!ELEMENT multistatus (response*, responsedescription?)  >
 
     http://www.webdav.org/specs/rfc4918.html#ELEMENT_multistatus
+
+    Required init arguments:
+    instance: resource object instance as originally requested by the client
+    context['depth']: depth requested by client
     """
     # http://www.django-rest-framework.org/api-guide/fields/#source
     responses = ResponseSerializer(many=True, source='*')
-    responsedescription = CharField(required=False)
+    responsedescription = SerializerMethodField(required=False)
 
     def __init__(self, depth=0, *args, **kwargs):
         if not isinstance(kwargs['instance'], BaseResource):
             raise TypeError("You need to feed in an instance of BaseResource "
                 "like this: MultistatusSerializer(instance=res_obj) ")
 
-        # because instance is not passed to list serializer
-        #self.context.set('requested_resource', self.context.get('requested_resource') or kwargs['instance'])
         super(MultistatusSerializer, self).__init__(*args, **kwargs)
+        # because instance is not passed to list serializer
+        self.context['requested_resource'] = self.context.get('requested_resource') or kwargs['instance']
 
-    def to_representation(self, obj):
-        #self.fields['responses'].depth = self.depth
-        super(MultistatusSerializer, self).to_representation(obj)
+    def get_responsedescription(self, obj):
+        # TODO overall description of all responses
+        return None
