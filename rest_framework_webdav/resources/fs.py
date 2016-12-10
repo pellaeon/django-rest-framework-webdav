@@ -33,11 +33,11 @@ from django.http import HttpResponse
 from django.utils.http import http_date
 from django.conf import settings
 
-from djangodav.base.resources import BaseDavResource
+from rest_framework_webdav.resources import BaseResource
 from djangodav.responses import ResponseException
 from djangodav.utils import safe_join, url_join
 
-class BaseFSDavResource(BaseDavResource):
+class BaseFSDavResource(BaseResource):
     """Implements an interface to the file system. This can be subclassed to provide
     a virtual file system (like say in MySQL). This default implementation simply uses
     python's os library to do most of the work."""

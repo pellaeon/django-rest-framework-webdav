@@ -38,8 +38,6 @@ class ResponseListSerializer(ListSerializer):
 
         ret = []
         for descendant_field in self.descendants:
-            print('asii')
-            print(descendant_field)
             ret.append(descendant_field.data)
 
         return ret
@@ -86,7 +84,6 @@ class ResponseSerializer(WebDAVResponseSerializer):
     #    return output
 
     def get_href(self, obj):
-        print('get href called')
         return self.instance.get_path()
 
     def get_propstat(self, obj):
@@ -94,7 +91,6 @@ class ResponseSerializer(WebDAVResponseSerializer):
 
     @property
     def data(self):
-        print('iii')
         return super(ResponseSerializer, self).data
     
 class MultistatusSerializer(WebDAVResponseSerializer):

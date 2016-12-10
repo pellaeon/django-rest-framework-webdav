@@ -33,8 +33,11 @@ class MockResource(MagicMock, BaseResource):
     getcontentlength = 0
 
     def __init__(self, path, *args, **kwargs):
-        super(MockResource, self).__init__(spec=BaseResource, *args, **kwargs)
-        BaseResource.__init__(self, path)
+        super(MockResource, self).__init__(spec=BaseResource, path=path, *args, **kwargs)
+        BaseResource.__init__(self, path=path)
+
+    def get_children(self):
+        return [MockResource(path='/path/屯/nnn/1')]
 
 
 class MockObject(MockResource):

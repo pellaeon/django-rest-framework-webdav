@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import os
 from django.test import TestCase
 from mock import Mock
 
@@ -19,12 +20,17 @@ class TestPropfindSerializer(TestCase):
 class TestMultiStatusSerializer(TestCase):
 
     def setUp(self):
-        self.resource = MockResource('/path/屯/nnn')
-        self.resource1 = MockResource('/path/屯/nnn/1')
-        self.resource2 = MockResource('/path/屯/nnn/2')
-        MockResource.get_children = Mock(return_value=[self.resource1, self.resource2])
+        #FIXME use proper mock objects
+        class TestDirFSResource(BaseFSDavResource):
+            root = os.path.dirname(os.path.realpath(__file__))
+
+            def __str__(self):
+                return "<Resource object for %s>" % self.get_abs_path()
+
+        self.resource = TestDirFSResource('/')
 
     def test_1(self):
+        # TODO proper testing, currently this is used to check the output by eye
         expect = 'asdasd'
         #print(self.resource.get_path())
         ser1 = MultistatusSerializer(instance=self.resource, context={
@@ -35,10 +41,9 @@ class TestMultiStatusSerializer(TestCase):
         print(rep1)
         print('-----------')
 
-        print(dir(ser1.fields['responses']))
+        #print(dir(ser1.fields['responses']))
         #ser1.fields['responses'].get_descendants()
         #print(ser1.fields['responses'].descendants[0].get_path())
         #print(ser1.fields['responses'].descendants[0].to_representation())
         #print(ser1.fields['responses'].descendants[0].instance)
         #print(ResponseSerializer.to_representation(ser1.fields['responses'].descendants[0]))
-        print(ser1.fields['responses'].descendants)
