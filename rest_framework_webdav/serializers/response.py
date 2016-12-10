@@ -42,14 +42,8 @@ class ResponseListSerializer(ListSerializer):
 
         return ret
 
-    def get_response_objects(self):
-        # Note that in WebDAV all response objects are flattened into a list, regardless of Depth
-        assert isinstance(self.context.get('depth'), int)
-        return list(self.context.get('requested_resource').get_descendants(
-            depth=self.context.get('depth'))
-            )
-
     def get_descendants(self, resource):
+        # Note that in WebDAV all response objects are flattened into a list, regardless of Depth
         assert isinstance(self.context.get('depth'), int)
         for res_obj in resource.get_descendants(
                 depth=self.context.get('depth')):
