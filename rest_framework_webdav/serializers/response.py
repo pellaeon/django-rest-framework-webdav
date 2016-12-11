@@ -6,6 +6,7 @@ from rest_framework.serializers import ListSerializer
 from rest_framework_webdav.serializers import WebDAVResponseSerializer
 #from rest_framework_webdav.fields import *
 from rest_framework_webdav.resources import BaseResource
+from rest_framework_webdav.serializers.props.base import get_namespace_classes
 
 """
 Elements that only appear in WebDAV client requests
@@ -81,6 +82,10 @@ class ResponseSerializer(WebDAVResponseSerializer):
         return self.instance.get_path()
 
     def get_propstat(self, obj):
+        """
+        Group propstat by response code, prop with the same response code goes
+        into the same propstat
+        """
         return "sssss"
 
     @property
