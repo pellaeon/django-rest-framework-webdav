@@ -4,12 +4,9 @@ from rest_framework.serializers import Serializer
 
 Namespace = namedtuple('Namespace', ['slug', 'identifier'])
 
-class BaseProp(Serializer):
-    name = 'baseprop'
+class BaseProp(object):
     live = True
     status = None
-    value = None
     namespace = Namespace(slug='d', identifier='DAV:')
-
-    def to_representation(self, obj):
-        raise NotImplementedError("You shouldn't use BaseProp directly. Subclass and implement to_representation().")
+    # if true, ResponseSerializer will set source to entire resource object
+    need_entire_resobj = False

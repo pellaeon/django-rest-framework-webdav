@@ -52,18 +52,22 @@ class PropstatSerializer(WebDAVResponseSerializer):
                 continue
             if field.status not in out:
                 out[field.status] = []
-            out[field.status].append({field.name: field.to_representation(attribute)})
+            out[field.status].append({key: field.to_representation(attribute)})
 
         return out
 
 
     def get_fields(self):
         """
-        Fields are determined dynamically
+        Fields are determined dynamically.
+        This will be invoked by @property fields() ,
+        fields() will set _fields as a BindingDict, which will .bind() the field
+        when you __setitem__()
         """
         fields = {}
         for prop_cls in get_prop_cls_list():
-            fields[prop_cls.name] = prop_cls(source='*') # initialize prop class
+            prop_instance = prop_cls(source='*') if prop_cls.need_entire_resobj else prop_cls() # initialize prop class
+            fields[prop_cls.__name__.lower()] = prop_instance
         return fields
 
 class ResponseListSerializer(ListSerializer):

@@ -4,12 +4,12 @@ All props specified by RFC 4918
 
 from .base import *
 
-class Getlastmodified(BaseProp):
-    name = 'getlastmodified'
+from rest_framework.fields import CharField
+
+class Getlastmodified(BaseProp, CharField):
+    # TODO refactor resource class, resource class should return datetime object,
+    # and let this field convert it to string.
     live = True
     status = "HTTP/1.1 200 OK"
-    value = None #TODO remove
     namespace = Namespace(slug='d', identifier='DAV:')
-
-    def to_representation(self, obj):
-        return obj.getlastmodified
+    # source = 'getlastmodified' # same as name so don't specify
