@@ -66,8 +66,7 @@ class PropstatSerializer(WebDAVResponseSerializer):
         """
         fields = {}
         for prop_cls in get_prop_cls_list():
-            prop_instance = prop_cls(source='*') if prop_cls.need_entire_resobj else prop_cls() # initialize prop class
-            fields[prop_cls.__name__.lower()] = prop_instance
+            fields[prop_cls.__name__.lower()] = prop_cls(source=prop_cls.needed_source) # initialize prop class
         return fields
 
 class ResponseListSerializer(ListSerializer):

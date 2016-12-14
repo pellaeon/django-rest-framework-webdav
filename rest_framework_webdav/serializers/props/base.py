@@ -8,5 +8,8 @@ class BaseProp(object):
     live = True
     status = None
     namespace = Namespace(slug='d', identifier='DAV:')
-    # if true, ResponseSerializer will set source to entire resource object
-    need_entire_resobj = False
+    # what source you need when ResponseSerializer initializes this Field,
+    # will be fed into source= when init, use None if you want to use the
+    # attribute on resobj that has the same name as this class's name.
+    # Use '*' to specify this field needs an entire resobj
+    needed_source = None
