@@ -10,6 +10,7 @@ class WebDAVResponseSerializer(Serializer):
         """
         depth: requested depth from client
         """
+        # TODO use context.depth
         self.depth = depth
         super(WebDAVResponseSerializer, self).__init__(**kwargs)
 

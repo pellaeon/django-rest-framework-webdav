@@ -4,8 +4,8 @@ from rest_framework.fields import *
 from rest_framework.serializers import ListSerializer
 
 from rest_framework_webdav.serializers import WebDAVResponseSerializer
-#from rest_framework_webdav.fields import *
 from rest_framework_webdav.resources import BaseResource
+# import all prop class so get_prop_cls_list can find them
 from rest_framework_webdav.serializers.props import *
 
 def get_prop_cls_list(cls=BaseProp):
