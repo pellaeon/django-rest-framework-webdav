@@ -105,13 +105,9 @@ class ResponseSerializer(WebDAVResponseSerializer):
     class Meta:
         list_serializer_class = ResponseListSerializer
 
-    #href = ListField(child=URLField(max_length=None), source='get_path')
-    href = SerializerMethodField()
+    href = CharField(source='get_path')
     status = CharField(required=False)
     propstat = PropstatSerializer(source='*')
-
-    def get_href(self, obj):
-        return self.instance.get_path()
     
 class MultistatusSerializer(WebDAVResponseSerializer):
     """
