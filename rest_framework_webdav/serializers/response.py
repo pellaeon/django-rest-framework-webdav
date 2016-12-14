@@ -6,7 +6,7 @@ from rest_framework.serializers import ListSerializer
 from rest_framework_webdav.serializers import WebDAVResponseSerializer
 #from rest_framework_webdav.fields import *
 from rest_framework_webdav.resources import BaseResource
-from rest_framework_webdav.serializers.props.base import get_namespace_classes
+from rest_framework_webdav.serializers.props import *
 
 """
 Elements that only appear in WebDAV client requests
@@ -23,11 +23,48 @@ class PropstatSerializer(WebDAVResponseSerializer):
     contain the props that are with the same status code.
     """
 
-    #prop = PropSerializer()
-    prop = CharField(source='testing_prop') # FIXME PoC
 
-    def testing_prop(self):
-        return 'blabla'
+    def to_representation(self, instance):
+        """
+        This implementation copies mostly from Serializer.to_representation() ,
+        with the required additional feature: group fields (props) into
+        propstat dictionaries.
+
+        Sample output:
+        {
+            'HTTP/1.1 200 OK': [
+                {'getlastmodified': 'Sat, 10 Dec 2016 16:31:16 -0000'}
+            ]
+        }
+
+        TODO forgot prop, should be propstat -> prop -> getlastmodified
+        TODO use _readable_fields just as in Serializer
+        """
+        out = {}
+        for key, field in self.fields.items():
+            try:
+                attribute = field.get_attribute(instance)
+            except SkipField:
+                continue
+            if field.status not in out:
+                out[field.status] = []
+            out[field.status].append({field.name: field.to_representation(attribute)})
+
+        return out
+
+    def _get_prop_cls_list(self, cls=BaseProp):
+        ret = cls.__subclasses__() + [g for s in cls.__subclasses__()
+                                       for g in self._get_prop_cls_list(s)]
+        return ret
+
+    def get_fields(self):
+        """
+        Fields are determined dynamically
+        """
+        fields = {}
+        for prop_cls in self._get_prop_cls_list():
+            fields[prop_cls.name] = prop_cls(source='*') # initialize prop class
+        return fields
 
 class ResponseListSerializer(ListSerializer):
 
@@ -58,6 +95,8 @@ class ResponseSerializer(WebDAVResponseSerializer):
 
     Automatically add missing required properties to object
     http://www.webdav.org/specs/rfc4918.html#dav.properties
+
+    TODO permission
     """
 
     class Meta:
@@ -66,31 +105,10 @@ class ResponseSerializer(WebDAVResponseSerializer):
     #href = ListField(child=URLField(max_length=None), source='get_path')
     href = SerializerMethodField()
     status = CharField(required=False)
-    #propstat = PropstatSerializer(many=True, source='*')
-    propstat = SerializerMethodField()
-
-    #maybe delete this
-    #def to_representation(self, resource):
-    #    assert isinstance(resource, BaseResource)
-
-    #    # this will in turn call to_representation() on every field
-    #    output = super(ResponseSerializer, self).to_representation(self.instance)
-
-    #    return output
+    propstat = PropstatSerializer(source='*')
 
     def get_href(self, obj):
         return self.instance.get_path()
-
-    def get_propstat(self, obj):
-        """
-        Group propstat by response code, prop with the same response code goes
-        into the same propstat
-        """
-        return "sssss"
-
-    @property
-    def data(self):
-        return super(ResponseSerializer, self).data
     
 class MultistatusSerializer(WebDAVResponseSerializer):
     """
