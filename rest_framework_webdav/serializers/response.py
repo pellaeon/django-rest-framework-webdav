@@ -8,6 +8,10 @@ from rest_framework_webdav.serializers import WebDAVResponseSerializer
 from rest_framework_webdav.resources import BaseResource
 from rest_framework_webdav.serializers.props import *
 
+def get_prop_cls_list(cls=BaseProp):
+    return cls.__subclasses__() + [g for s in cls.__subclasses__()
+                                   for g in get_prop_cls_list(s)]
+
 """
 Elements that only appear in WebDAV client requests
 
@@ -43,7 +47,7 @@ class PropstatSerializer(WebDAVResponseSerializer):
         out = {}
         for key, field in self.fields.items():
             try:
-                attribute = field.get_attribute(instance)
+                attribute = field.get_attribute(instance) # get_attribute will check source='*'
             except SkipField:
                 continue
             if field.status not in out:
@@ -52,17 +56,13 @@ class PropstatSerializer(WebDAVResponseSerializer):
 
         return out
 
-    def _get_prop_cls_list(self, cls=BaseProp):
-        ret = cls.__subclasses__() + [g for s in cls.__subclasses__()
-                                       for g in self._get_prop_cls_list(s)]
-        return ret
 
     def get_fields(self):
         """
         Fields are determined dynamically
         """
         fields = {}
-        for prop_cls in self._get_prop_cls_list():
+        for prop_cls in get_prop_cls_list():
             fields[prop_cls.name] = prop_cls(source='*') # initialize prop class
         return fields
 
