@@ -19,6 +19,7 @@ Only to_representation() needs to be implemented.
 """
 
 class PropstatSerializer(WebDAVResponseSerializer):
+    # TODO XML namespace for all serializers and fields
     """
     <!ELEMENT propstat (prop, status, error?, responsedescription?) >
 

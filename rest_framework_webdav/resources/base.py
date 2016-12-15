@@ -64,7 +64,7 @@ class BaseResource(object):
     @property
     def displayname(self):
         if not self.path:
-            return None
+            return '/'
         return self.path[-1]
 
     @property
@@ -206,8 +206,8 @@ class MetaEtagMixIn(object):
         file system. The etag is used to detect changes to a resource between HTTP calls. So this
         needs to change if a resource is modified."""
         hashsum = md5()
-        hashsum.update(self.displayname)
-        hashsum.update(str(self.creationdate))
-        hashsum.update(str(self.getlastmodified))
-        hashsum.update(str(self.getcontentlength))
+        hashsum.update(self.displayname.encode())
+        hashsum.update(str(self.creationdate).encode())
+        hashsum.update(str(self.getlastmodified).encode())
+        hashsum.update(str(self.getcontentlength).encode())
         return hashsum.hexdigest()

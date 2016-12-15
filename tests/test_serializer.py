@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import os
+from pprint import pprint
 from django.test import TestCase
 from mock import Mock
 
@@ -21,7 +22,7 @@ class TestMultiStatusSerializer(TestCase):
 
     def setUp(self):
         #FIXME use proper mock objects
-        class TestDirFSResource(BaseFSDavResource):
+        class TestDirFSResource(MetaEtagMixIn, BaseFSDavResource):
             root = os.path.dirname(os.path.realpath(__file__))
 
             def __str__(self):
@@ -32,18 +33,9 @@ class TestMultiStatusSerializer(TestCase):
     def test_1(self):
         # TODO proper testing, currently this is used to check the output by eye
         expect = 'asdasd'
-        #print(self.resource.get_path())
         ser1 = MultistatusSerializer(instance=self.resource, context={
-            'requested_resource': self.resource,
             'depth': 1,
             })
         rep1 = ser1.data
-        print(rep1)
+        pprint(rep1)
         print('-----------')
-
-        #print(dir(ser1.fields['responses']))
-        #ser1.fields['responses'].get_descendants()
-        #print(ser1.fields['responses'].descendants[0].get_path())
-        #print(ser1.fields['responses'].descendants[0].to_representation())
-        #print(ser1.fields['responses'].descendants[0].instance)
-        #print(ResponseSerializer.to_representation(ser1.fields['responses'].descendants[0]))

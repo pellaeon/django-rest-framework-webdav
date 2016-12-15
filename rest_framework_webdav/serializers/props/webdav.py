@@ -13,3 +13,8 @@ class Getlastmodified(BaseProp, CharField):
     status = "HTTP/1.1 200 OK"
     namespace = Namespace(slug='d', identifier='DAV:')
     # source = 'getlastmodified' # same as name so don't specify
+
+class Getetag(BaseProp, CharField):
+    live = True
+    status = "HTTP/1.1 200 OK"
+    namespace = Namespace(slug='d', identifier='DAV:')
