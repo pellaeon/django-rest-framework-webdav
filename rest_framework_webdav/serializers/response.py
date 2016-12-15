@@ -5,12 +5,11 @@ from rest_framework.serializers import ListSerializer
 
 from rest_framework_webdav.serializers import WebDAVResponseSerializer
 from rest_framework_webdav.resources import BaseResource
-# import all prop class so get_prop_cls_list can find them
+# import all prop class so find_subclasses can find them
 from rest_framework_webdav.serializers.props import *
-
-def get_prop_cls_list(cls=BaseProp):
-    return cls.__subclasses__() + [g for s in cls.__subclasses__()
-                                   for g in get_prop_cls_list(s)]
+# TODO we need a way to discover all third-party props and import them,
+# so find_subclasses can find them.
+from rest_framework_webdav.serializers.utils import find_subclasses
 
 """
 Elements that only appear in WebDAV client requests
@@ -66,7 +65,7 @@ class PropstatSerializer(WebDAVResponseSerializer):
         when you __setitem__()
         """
         fields = {}
-        for prop_cls in get_prop_cls_list():
+        for prop_cls in find_subclasses(cls=BaseProp):
             fields[prop_cls.__name__.lower()] = prop_cls(source=prop_cls.needed_source) # initialize prop class
         return fields
 
