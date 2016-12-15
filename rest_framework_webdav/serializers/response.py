@@ -10,6 +10,7 @@ from rest_framework_webdav.serializers.props import *
 # TODO we need a way to discover all third-party props and import them,
 # so find_subclasses can find them.
 from rest_framework_webdav.serializers.utils import find_subclasses
+from rest_framework_webdav.namespaces import DAVNS
 
 """
 Elements that only appear in WebDAV client requests
@@ -50,8 +51,8 @@ class PropstatSerializer(WebDAVResponseSerializer):
             except SkipField:
                 continue
             if field.status not in out:
-                out[field.status] = {'d:prop': []}
-            out[field.status]['d:prop'].append({key: field.to_representation(attribute)})
+                out[field.status] = {DAVNS.prepend('prop'): []}
+            out[field.status][DAVNS.prepend('prop')].append({key: field.to_representation(attribute)})
 
         return out
 

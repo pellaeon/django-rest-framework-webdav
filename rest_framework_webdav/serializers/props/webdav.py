@@ -8,19 +8,18 @@ from rest_framework.fields import CharField
 from rest_framework.serializers import Serializer
 
 from rest_framework_webdav.serializers.utils import find_subclasses
+from rest_framework_webdav.namespaces import DAVNS
 
 class Getlastmodified(BaseProp, CharField):
     # TODO refactor resource class, resource class should return datetime object,
     # and let this field convert it to string.
     live = True
     status = "HTTP/1.1 200 OK"
-    namespace = Namespace(slug='d', identifier='DAV:')
     # source = 'getlastmodified' # same as name so don't specify
 
 class Getetag(BaseProp, CharField):
     live = True
     status = "HTTP/1.1 200 OK"
-    namespace = Namespace(slug='d', identifier='DAV:')
 
 class Resourcetype(BaseProp, Serializer):
     """
@@ -28,13 +27,12 @@ class Resourcetype(BaseProp, Serializer):
     """
     live = True
     status = "HTTP/1.1 200 OK"
-    namespace = Namespace(slug='d', identifier='DAV:')
     needed_source = '*'
 
     def to_representation(self, obj):
         ret = super(Resourcetype, self).to_representation(obj)
         if obj.is_collection:
-            ret['d:collection'] = None #TODO dynamic namespace slug
+            ret[DAVNS.prepend('collection')] = None
         return ret
 
     def get_fields(self):
