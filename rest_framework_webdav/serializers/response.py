@@ -41,7 +41,6 @@ class PropstatSerializer(WebDAVResponseSerializer):
             ]
         }
 
-        TODO forgot prop, should be propstat -> prop -> getlastmodified
         TODO use _readable_fields just as in Serializer
         """
         out = {}
@@ -51,8 +50,8 @@ class PropstatSerializer(WebDAVResponseSerializer):
             except SkipField:
                 continue
             if field.status not in out:
-                out[field.status] = []
-            out[field.status].append({key: field.to_representation(attribute)})
+                out[field.status] = {'d:prop': []}
+            out[field.status]['d:prop'].append({key: field.to_representation(attribute)})
 
         return out
 
