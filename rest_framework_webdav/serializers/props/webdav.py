@@ -34,7 +34,7 @@ class Resourcetype(BaseProp, Serializer):
     def to_representation(self, obj):
         ret = super(Resourcetype, self).to_representation(obj)
         if obj.is_collection:
-            ret['d:collection'] = None #TODO dynamic namespace
+            ret['d:collection'] = None #TODO dynamic namespace slug
         return ret
 
     def get_fields(self):

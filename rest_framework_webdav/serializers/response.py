@@ -129,8 +129,6 @@ class MultistatusSerializer(WebDAVResponseSerializer):
                 "like this: MultistatusSerializer(instance=res_obj) ")
 
         super(MultistatusSerializer, self).__init__(*args, **kwargs)
-        # because instance is not passed to list serializer
-        self.context['requested_resource'] = self.context.get('requested_resource') or kwargs['instance']
 
     def get_responsedescription(self, obj):
         # TODO overall description of all responses
