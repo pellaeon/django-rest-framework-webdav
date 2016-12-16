@@ -48,3 +48,11 @@ class Resourcetype(BaseProp, Serializer):
             # resourcetype classes are always passed entire resobj instance
             fields[resourcetype_cls.__name__.lower()] = resourcetype_cls(source='*')
         return fields
+
+class Creationdate(BaseProp, CharField):
+    live = True
+    status = "HTTP/1.1 200 OK"
+
+class Displayname(BaseProp, CharField):
+    live = True
+    status = "HTTP/1.1 200 OK"
