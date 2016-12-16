@@ -19,7 +19,6 @@ Only to_representation() needs to be implemented.
 """
 
 class PropstatSerializer(WebDAVResponseSerializer):
-    # TODO XML namespace for all serializers and fields
     """
     <!ELEMENT propstat (prop, status, error?, responsedescription?) >
 
@@ -52,7 +51,7 @@ class PropstatSerializer(WebDAVResponseSerializer):
                 continue
             if field.status not in out:
                 out[field.status] = {DAVNS.prepend('prop'): []}
-            out[field.status][DAVNS.prepend('prop')].append({key: field.to_representation(attribute)})
+            out[field.status][DAVNS.prepend('prop')].append({DAVNS.prepend(key): field.to_representation(attribute)})
 
         return out
 
