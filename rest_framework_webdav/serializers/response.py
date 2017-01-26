@@ -115,14 +115,13 @@ class MultistatusSerializer(WebDAVResponseSerializer):
     http://www.webdav.org/specs/rfc4918.html#ELEMENT_multistatus
 
     Required init arguments:
-    instance: resource object instance as originally requested by the client
     context['depth']: depth requested by client
     """
     # http://www.django-rest-framework.org/api-guide/fields/#source
     responses = ResponseSerializer(many=True, source='*')
     responsedescription = SerializerMethodField(required=False)
 
-    def __init__(self, depth=0, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         if not isinstance(kwargs['instance'], BaseResource):
             raise TypeError("You need to feed in an instance of BaseResource "
                 "like this: MultistatusSerializer(instance=res_obj) ")
