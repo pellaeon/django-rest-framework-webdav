@@ -4,7 +4,7 @@ All props specified by RFC 4918
 
 from .base import *
 
-from rest_framework.fields import CharField
+from rest_framework.fields import CharField, IntegerField
 from rest_framework.serializers import Serializer
 
 from rest_framework_webdav.serializers.utils import find_subclasses
@@ -60,3 +60,7 @@ class Getcontenttype(BaseProp, CharField):
     live = True
     status = "HTTP/1.1 200 OK"
     needed_source = 'content_type'
+
+class Getcontentlength(BaseProp, IntegerField):
+    live = True
+    status = "HTTP/1.1 200 OK"
