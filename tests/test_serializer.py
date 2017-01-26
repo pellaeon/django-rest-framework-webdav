@@ -18,7 +18,7 @@ class TestPropfindSerializer(TestCase):
     def test_request(self):
         pass
 
-class TestMultiStatusSerializer(TestCase):
+class TestResponseSerializers(TestCase):
 
     def setUp(self):
         #FIXME use proper mock objects
@@ -30,12 +30,23 @@ class TestMultiStatusSerializer(TestCase):
 
         self.resource = TestDirFSResource('/')
 
-    def test_1(self):
-        # TODO proper testing, currently this is used to check the output by eye
-        expect = 'asdasd'
         ser1 = MultistatusSerializer(instance=self.resource, context={
             'depth': 1,
             })
-        rep1 = ser1.data
-        pprint(rep1)
+        self.rep1 = ser1.data
+
+    def test_multistatus(self):
+        self.assertIsNone(self.rep1['d:responsedescription'])
+        self.assertIsInstance(self.rep1['d:responses'], list)
+
+        # print actual data for humans to check
+        pprint(self.rep1)
         print('-----------')
+
+    def test_responses(self):
+        self.assertEqual(self.rep1['d:responses'][0]['d:href'], '/')
+        self.assertIsInstance(self.rep1['d:responses'][0]['d:propstat'], dict)
+
+    def test_propstat(self):
+        self.assertEqual(self.rep1['d:responses'][0]['d:href'], '/')
+        self.assertIsInstance(self.rep1['d:responses'][0]['d:propstat'], dict)
