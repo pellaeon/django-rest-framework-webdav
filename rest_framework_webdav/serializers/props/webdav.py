@@ -15,7 +15,6 @@ class Getlastmodified(BaseProp, CharField):
     # and let this field convert it to string.
     live = True
     status = "HTTP/1.1 200 OK"
-    # source = 'getlastmodified' # same as name so don't specify
 
 class Getetag(BaseProp, CharField):
     live = True
@@ -56,3 +55,8 @@ class Creationdate(BaseProp, CharField):
 class Displayname(BaseProp, CharField):
     live = True
     status = "HTTP/1.1 200 OK"
+
+class Getcontenttype(BaseProp, CharField):
+    live = True
+    status = "HTTP/1.1 200 OK"
+    needed_source = 'content_type'
