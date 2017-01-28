@@ -120,7 +120,7 @@ class MultistatusSerializer(WebDAVResponseSerializer):
     context['depth']: depth requested by client
     """
     # http://www.django-rest-framework.org/api-guide/fields/#source
-    responses = ResponseSerializer(many=True, source='*')
+    response = ResponseSerializer(many=True, source='*')
     responsedescription = SerializerMethodField(required=False)
 
     def __init__(self, *args, **kwargs):

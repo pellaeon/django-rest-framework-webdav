@@ -40,7 +40,7 @@ class TestResponseSerializers(TestCase):
 
     def test_multistatus(self):
         self.assertIsNone(self.rep1['d:responsedescription'])
-        self.assertIsInstance(self.rep1['d:responses'], ElementList)
+        self.assertIsInstance(self.rep1['d:response'], ElementList)
 
         # print actual data for humans to check
         renderer = WebDAVXMLRenderer()
@@ -48,10 +48,10 @@ class TestResponseSerializers(TestCase):
         pprint(self.rep1)
         print('-----------')
 
-    def test_responses(self):
-        self.assertEqual(self.rep1['d:responses'][0]['d:href'], '/')
-        self.assertIsInstance(self.rep1['d:responses'][0]['d:propstat'], dict)
+    def test_response(self):
+        self.assertEqual(self.rep1['d:response'][0]['d:href'], '/')
+        self.assertIsInstance(self.rep1['d:response'][0]['d:propstat'], dict)
 
     def test_propstat(self):
-        self.assertEqual(self.rep1['d:responses'][0]['d:href'], '/')
-        self.assertIsInstance(self.rep1['d:responses'][0]['d:propstat'], dict)
+        self.assertEqual(self.rep1['d:response'][0]['d:href'], '/')
+        self.assertIsInstance(self.rep1['d:response'][0]['d:propstat'], dict)

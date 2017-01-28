@@ -8,3 +8,6 @@ class ElementList(list):
     so that the renderer knows.
     This class does not check if the elements are REALLY identical (same shape)
     """
+
+    #def __repr__(self):
+    #    return "ElementList(%s)" % list(self)
