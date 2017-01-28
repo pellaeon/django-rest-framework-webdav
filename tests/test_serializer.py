@@ -10,6 +10,8 @@ from rest_framework_webdav.serializers import *
 from rest_framework_webdav.resources import *
 from .resources import MockResource
 
+from rest_framework_webdav.renderers import WebDAVXMLRenderer
+
 class TestPropfindSerializer(TestCase):
 
     def setUp(self):
@@ -40,6 +42,8 @@ class TestResponseSerializers(TestCase):
         self.assertIsInstance(self.rep1['d:responses'], list)
 
         # print actual data for humans to check
+        renderer = WebDAVXMLRenderer()
+        #print(renderer.render(self.rep1))
         pprint(self.rep1)
         print('-----------')
 

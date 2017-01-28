@@ -14,4 +14,6 @@ mkdocs==0.11.1
 future>=0.16.0
 mock
 
+djangorestframework-xml
+
 -e git+https://github.com/pellaeon/djangodav#egg=djangodav

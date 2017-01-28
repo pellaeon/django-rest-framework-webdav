@@ -3,4 +3,6 @@
 Django>=1.8
 djangorestframework>=3.4
 future>=0.16.0
+djangorestframework-xml
+#-e git+https://github.com/pellaeon/django-rest-framework-xml#egg=djangorestframework-xml
 -e git+https://github.com/pellaeon/djangodav#egg=djangodav

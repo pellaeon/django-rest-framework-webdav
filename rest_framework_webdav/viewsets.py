@@ -4,7 +4,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.settings import api_settings
 
 from .serializers import WebDAVSerializer
-from rest_framework_xml.renderers import XMLRenderer
+from .renderers import WebDAVXMLRenderer
 
 class GenericDavViewSet(GenericViewSet):
     """
@@ -18,7 +18,7 @@ class GenericDavViewSet(GenericViewSet):
             'proppatch', 'delete', 'head', 'options', 'mkcol', 'copy', 'move',
             ]
 
-    renderer_classes = tuple(XMLRenderer) + api_settings.DEFAULT_RENDERER_CLASSES
+    renderer_classes = tuple(WebDAVXMLRenderer) + api_settings.DEFAULT_RENDERER_CLASSES
     parser_classes = api_settings.DEFAULT_PARSER_CLASSES
     authentication_classes = api_settings.DEFAULT_AUTHENTICATION_CLASSES
     throttle_classes = api_settings.DEFAULT_THROTTLE_CLASSES
