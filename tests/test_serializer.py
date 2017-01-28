@@ -11,6 +11,7 @@ from rest_framework_webdav.resources import *
 from .resources import MockResource
 
 from rest_framework_webdav.renderers import WebDAVXMLRenderer
+from rest_framework_webdav.serializers.utils import ElementList
 
 class TestPropfindSerializer(TestCase):
 
@@ -39,7 +40,7 @@ class TestResponseSerializers(TestCase):
 
     def test_multistatus(self):
         self.assertIsNone(self.rep1['d:responsedescription'])
-        self.assertIsInstance(self.rep1['d:responses'], list)
+        self.assertIsInstance(self.rep1['d:responses'], ElementList)
 
         # print actual data for humans to check
         renderer = WebDAVXMLRenderer()

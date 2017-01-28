@@ -6,6 +6,7 @@ from django.utils.xmlutils import SimplerXMLGenerator
 from django.utils.six.moves import StringIO
 from django.utils.encoding import smart_text
 from rest_framework.renderers import BaseRenderer, BrowsableAPIRenderer
+from rest_framework_webdav.serializers.utils import ElementList
 
 class WebDAVXMLRenderer(BaseRenderer):
     """
@@ -44,9 +45,15 @@ class WebDAVXMLRenderer(BaseRenderer):
 
         elif isinstance(data, dict):
             for key, value in six.iteritems(data):
-                xml.startElement(key, {})
-                self._to_xml(xml, value)
-                xml.endElement(key)
+                if isinstance(value, ElementList):
+                    for innerval in value:
+                        xml.startElement(key, {})
+                        self._to_xml(xml, innerval)
+                        xml.endElement(key)
+                else:
+                    xml.startElement(key, {})
+                    self._to_xml(xml, value)
+                    xml.endElement(key)
 
         elif data is None:
             # Don't output any value

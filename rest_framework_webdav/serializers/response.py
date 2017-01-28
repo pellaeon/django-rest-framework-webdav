@@ -11,7 +11,7 @@ from rest_framework_webdav.resources import BaseResource
 from rest_framework_webdav.serializers.props import *
 # TODO we need a way to discover all third-party props and import them,
 # so find_subclasses can find them.
-from rest_framework_webdav.serializers.utils import find_subclasses
+from rest_framework_webdav.serializers.utils import find_subclasses, ElementList
 from rest_framework_webdav.namespaces import DAVNS
 
 """
@@ -78,7 +78,7 @@ class ResponseListSerializer(ListSerializer):
         if not self.descendants:
             self.get_descendants(obj)
 
-        ret = []
+        ret = ElementList()
         for descendant_field in self.descendants:
             ret.append(descendant_field.data)
 
@@ -110,39 +110,7 @@ class ResponseSerializer(WebDAVResponseSerializer):
     status = CharField(required=False)
     propstat = PropstatSerializer(source='*')
     
-class SubstituteFieldsMixin(object):
-    def to_representation(self, instance):
-        ret = list()
-        fields = self._readable_fields
-
-        for field in fields:
-            try:
-                attribute = field.get_attribute(instance)
-            except SkipField:
-                continue
-
-            # We skip `to_representation` for `None` values so that fields do
-            # not have to explicitly deal with that case.
-            #
-            # For related fields with `use_pk_only_optimization` we need to
-            # resolve the pk value.
-            check_for_none = attribute.pk if isinstance(attribute, PKOnlyObject) else attribute
-            if check_for_none is not None:
-                ret.append(field.to_representation(attribute))
-
-        return ret
-
-    @property
-    def data(self):
-        ret = super(Serializer, self).data
-        from pprint import pprint
-        #print('-----')
-        #pprint(ret)
-        #print('-----')
-        return ReturnList(ret, serializer=self)
-
-class MultistatusSerializer(SubstituteFieldsMixin, WebDAVResponseSerializer):
-#class MultistatusSerializer(WebDAVResponseSerializer):
+class MultistatusSerializer(WebDAVResponseSerializer):
     """
     <!ELEMENT multistatus (response*, responsedescription?)  >
 
