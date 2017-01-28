@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 from rest_framework.fields import *
 from rest_framework.serializers import ListSerializer
+from rest_framework.relations import PKOnlyObject
+from rest_framework.utils.serializer_helpers import ReturnList
 
 from rest_framework_webdav.serializers import WebDAVResponseSerializer
 from rest_framework_webdav.resources import BaseResource
@@ -108,7 +110,39 @@ class ResponseSerializer(WebDAVResponseSerializer):
     status = CharField(required=False)
     propstat = PropstatSerializer(source='*')
     
-class MultistatusSerializer(WebDAVResponseSerializer):
+class SubstituteFieldsMixin(object):
+    def to_representation(self, instance):
+        ret = list()
+        fields = self._readable_fields
+
+        for field in fields:
+            try:
+                attribute = field.get_attribute(instance)
+            except SkipField:
+                continue
+
+            # We skip `to_representation` for `None` values so that fields do
+            # not have to explicitly deal with that case.
+            #
+            # For related fields with `use_pk_only_optimization` we need to
+            # resolve the pk value.
+            check_for_none = attribute.pk if isinstance(attribute, PKOnlyObject) else attribute
+            if check_for_none is not None:
+                ret.append(field.to_representation(attribute))
+
+        return ret
+
+    @property
+    def data(self):
+        ret = super(Serializer, self).data
+        from pprint import pprint
+        #print('-----')
+        #pprint(ret)
+        #print('-----')
+        return ReturnList(ret, serializer=self)
+
+class MultistatusSerializer(SubstituteFieldsMixin, WebDAVResponseSerializer):
+#class MultistatusSerializer(WebDAVResponseSerializer):
     """
     <!ELEMENT multistatus (response*, responsedescription?)  >
 
