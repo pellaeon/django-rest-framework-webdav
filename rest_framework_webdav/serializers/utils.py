@@ -11,3 +11,10 @@ class ElementList(list):
 
     #def __repr__(self):
     #    return "ElementList(%s)" % list(self)
+
+class ElementGroup(dict):
+    """
+    This is a simple class used to put in identical elements,
+    so that the renderer knows.
+    This class does not check if the elements are REALLY identical (same shape)
+    """

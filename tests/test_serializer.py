@@ -44,8 +44,8 @@ class TestResponseSerializers(TestCase):
 
         # print actual data for humans to check
         renderer = WebDAVXMLRenderer()
-        #print(renderer.render(self.rep1))
-        pprint(self.rep1)
+        print(renderer.render(self.rep1))
+        #pprint(self.rep1)
         print('-----------')
 
     def test_response(self):
