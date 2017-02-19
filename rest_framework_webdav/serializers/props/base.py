@@ -6,6 +6,14 @@ class BaseProp(object):
     """
     All prop serializers must subclass BaseProp to register themselves.
     Then ResponseSerializer will call every prop serializer to propagate values.
+
+    Note:
+    Usually you need to mix this class with a rest_framework `Field`
+    class, this way rest_framework will fetch the field's value from the
+    underlying resource object property that has the same name as your prop
+    class name.
+    See `serializers/props/webdav.py` for examples, such as `Getetag` prop, the
+    value will be fetched from `res_obj.getetag`.
     """
     live = True
     status = None
@@ -15,11 +23,3 @@ class BaseProp(object):
     # attribute on resobj that has the same name as this class's name.
     # Use '*' to specify this field needs an entire resobj
     needed_source = None
-
-class BaseResourcetypeChild(object):
-    """
-    All custom <resourcetype> child elements must subclass BaseResourcetypeChild
-    to register.
-    resourcetype classes are always passed entire resobj instance.
-    """
-    namespace = DAVNS

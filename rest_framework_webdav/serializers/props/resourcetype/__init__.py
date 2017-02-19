@@ -1,0 +1,1 @@
+from .iscollection import *

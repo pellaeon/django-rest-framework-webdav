@@ -9,6 +9,7 @@ from rest_framework.serializers import Serializer
 
 from rest_framework_webdav.serializers.utils import find_subclasses
 from rest_framework_webdav.namespaces import DAVNS
+from rest_framework_webdav.settings import webdav_api_settings
 
 class Getlastmodified(BaseProp, CharField):
     # TODO refactor resource class, resource class should return datetime object,
@@ -29,9 +30,14 @@ class Resourcetype(BaseProp, Serializer):
     needed_source = '*'
 
     def to_representation(self, obj):
-        ret = super(Resourcetype, self).to_representation(obj)
-        if obj.is_collection:
-            ret[DAVNS.prepend('collection')] = None
+        fielddict = super(Resourcetype, self).to_representation(obj)
+
+        ret = {}
+        # use field values as return dict keys
+        for key, val in fielddict.items():
+            if val == None:
+                continue
+            ret[val] = None
         return ret
 
     def get_fields(self):
@@ -43,8 +49,13 @@ class Resourcetype(BaseProp, Serializer):
         when you __setitem__()
         """
         fields = {}
-        for resourcetype_cls in find_subclasses(cls=BaseResourcetypeChild):
-            # resourcetype classes are always passed entire resobj instance
+        for resourcetype_cls in webdav_api_settings.RESOURCETYPES:
+            """
+            <resourcetype> children don't have keys, only values, but
+            field values won't be available until to_representation is called,
+            so we can't set the field name to value just yet, we'll do it in
+            to_representation.
+            """
             fields[resourcetype_cls.__name__.lower()] = resourcetype_cls(source='*')
         return fields
 
