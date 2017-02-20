@@ -3,10 +3,12 @@ from __future__ import unicode_literals
 
 import os
 from pprint import pprint
-from django.test import TestCase
+from django.test import TestCase, override_settings
+from django.utils.six.moves import reload_module
 from mock import Mock
 
-from rest_framework_webdav.serializers import *
+from rest_framework_webdav.settings import webdav_api_settings
+from rest_framework_webdav import serializers
 from rest_framework_webdav.resources import *
 from .resources import MockResource
 
@@ -33,7 +35,7 @@ class TestResponseSerializers(TestCase):
 
         self.resource = TestDirFSResource('/')
 
-        ser1 = MultistatusSerializer(instance=self.resource, context={
+        ser1 = serializers.MultistatusSerializer(instance=self.resource, context={
             'depth': 1,
             })
         self.rep1 = ser1.data
@@ -55,3 +57,41 @@ class TestResponseSerializers(TestCase):
     def test_propstat(self):
         self.assertEqual(self.rep1['d:response'][0]['d:href'], '/')
         self.assertIsInstance(self.rep1['d:response'][0]['d:propstat'], dict)
+
+class TestResourcetype(TestCase):
+
+    def setUp(self):
+        class TestDirFSResource(MetaEtagMixIn, BaseFSDavResource):
+            root = os.path.dirname(os.path.realpath(__file__))
+
+            def __str__(self):
+                return "<Resource object for %s>" % self.get_abs_path()
+
+        reload_module(serializers)
+        self.dir_resource = TestDirFSResource('/')
+        self.file_resource = TestDirFSResource('/test_serializers.py')
+        ser1 = serializers.Resourcetype(instance=self.dir_resource, context={
+            'depth': 1,
+            })
+        self.rep1 = ser1.data
+        ser2 = serializers.Resourcetype(instance=self.file_resource, context={
+            'depth': 1,
+            })
+        self.rep2 = ser2.data
+
+    def tearDown(self):
+        reload_module(serializers)
+
+    def test_iscollection(self):
+        self.assertEqual(self.rep1['d:collection'], None)
+        self.assertNotIn('d:collection', self.rep2)
+
+    @override_settings(REST_FRAMEWORK_WEBDAV={
+        'RESOURCETYPES': [
+            'rest_framework_webdav.serializers.props.resourcetype.IscollectionResourceType',
+            'rest_framework_webdav.example.props.PhotoResourceType',
+            ]})
+    def test_example_resourcetype(self):
+        pprint(webdav_api_settings.RESOURCETYPES)
+        #pprint(self.rep1)
+        #pprint(self.rep2)
