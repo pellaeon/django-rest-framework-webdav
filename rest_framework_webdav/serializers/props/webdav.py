@@ -29,6 +29,11 @@ class Resourcetype(BaseProp, Serializer):
     status = "HTTP/1.1 200 OK"
     needed_source = '*'
 
+    def __init__(self, resourcetype_clss=None, **kwargs):
+        if resourcetype_clss:
+            self.resourcetype_clss = resourcetype_clss
+        super(Resourcetype, self).__init__(**kwargs)
+
     def to_representation(self, obj):
         fielddict = super(Resourcetype, self).to_representation(obj)
 
@@ -49,7 +54,8 @@ class Resourcetype(BaseProp, Serializer):
         when you __setitem__()
         """
         fields = {}
-        for resourcetype_cls in webdav_api_settings.RESOURCETYPES:
+        resourcetype_clss = getattr(self, 'resourcetype_clss', webdav_api_settings.RESOURCETYPES)
+        for resourcetype_cls in resourcetype_clss:
             """
             <resourcetype> children don't have keys, only values, but
             field values won't be available until to_representation is called,

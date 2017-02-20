@@ -25,7 +25,5 @@ def reload_api_settings(*args, **kwargs):
     setting, value = kwargs['setting'], kwargs['value']
     if setting == 'REST_FRAMEWORK_WEBDAV':
         webdav_api_settings = APISettings(value, DEFAULTS, IMPORT_STRINGS)
-        print('%s: %s' % (kwargs['enter'], webdav_api_settings.RESOURCETYPES))
-
 
 setting_changed.connect(reload_api_settings)

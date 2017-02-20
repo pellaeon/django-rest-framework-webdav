@@ -7,8 +7,8 @@ class PhotoResourceType(BaseResourcetypeChild, CharField):
 
     def to_representation(self, obj):
         if obj.is_collection:
-            return 'album'
+            return self.namespace.prepend('album')
         elif obj.content_type.startswith('image/'):
-            return 'photo'
+            return self.namespace.prepend('photo')
         else:
-            return 'unknown'
+            return self.namespace.prepend('unknown')
